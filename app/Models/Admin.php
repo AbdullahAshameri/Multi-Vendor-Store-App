@@ -11,6 +11,6 @@ class Admin extends User
     use HasFactory, Notifiable;
 
     protected $fillable = [
-        'name', 'email', 'username', 'password', 'phone_number', 'super_admin', 'status',
+        'name', 'email', 'password', 'phone_number', 'super_admin', 'status',
     ];
 }

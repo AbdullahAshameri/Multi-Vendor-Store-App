@@ -39,17 +39,18 @@ class LoginRequest extends FormRequest
      */
     public function authenticate(): void
     {
-        $this->ensureIsNotRateLimited();
+        $guard = $this->guard();
+        $this->ensureIsNotRateLimited($guard);
 
-        if (! Auth::attempt($this->only('email', 'password'), $this->boolean('remember'))) {
-            RateLimiter::hit($this->throttleKey());
+        if (! Auth::guard($guard)->attempt($this->credentials(), $this->boolean('remember'))) {
+            RateLimiter::hit($this->throttleKey($guard));
 
             throw ValidationException::withMessages([
                 'email' => trans('auth.failed'),
             ]);
         }
 
-        RateLimiter::clear($this->throttleKey());
+        RateLimiter::clear($this->throttleKey($guard));
     }
 
     /**
@@ -57,15 +58,15 @@ class LoginRequest extends FormRequest
      *
      * @throws \Illuminate\Validation\ValidationException
      */
-    public function ensureIsNotRateLimited(): void
+    public function ensureIsNotRateLimited(string $guard): void
     {
-        if (! RateLimiter::tooManyAttempts($this->throttleKey(), 5)) {
+        if (! RateLimiter::tooManyAttempts($this->throttleKey($guard), 5)) {
             return;
         }
 
         event(new Lockout($this));
 
-        $seconds = RateLimiter::availableIn($this->throttleKey());
+        $seconds = RateLimiter::availableIn($this->throttleKey($guard));
 
         throw ValidationException::withMessages([
             'email' => trans('auth.throttle', [
@@ -78,8 +79,18 @@ class LoginRequest extends FormRequest
     /**
      * Get the rate limiting throttle key for the request.
      */
-    public function throttleKey(): string
+    public function throttleKey(?string $guard = null): string
     {
-        return Str::transliterate(Str::lower($this->input('email')).'|'.$this->ip());
+        return Str::transliterate(Str::lower($this->input('email')).'|'.$guard.'|'.$this->ip());
+    }
+
+    protected function guard(): string
+    {
+        return $this->is('admin/*') ? 'admin' : config('auth.defaults.guard', 'web');
+    }
+
+    protected function credentials(): array
+    {
+        return $this->only('email', 'password');
     }
 }
