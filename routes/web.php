@@ -1,15 +1,17 @@
 <?php
 
-use App\Http\Controllers\Front\ProductsController;
 use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\Front\Auth\TowFactorAuthentcationController;
 use App\Http\Controllers\Front\CartController;
 use App\Http\Controllers\Front\CheckoutController;
 use App\Http\Controllers\Front\HomeController;
+use App\Http\Controllers\Front\ProductsController;
 use App\Http\Controllers\ProfileController;
+use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\Route;
+use Laravel\Fortify\Http\Responses\TwoFactorConfirmedResponse;
 
-
-
+// use Laravel\Fortify\Http\Responses\TwoFactorConfirmedResponse;
 
 
 /*
@@ -37,11 +39,14 @@ Route::resource('cart', CartController::class);
 Route::get('checkout', [CheckoutController::class, 'create'])->name('checkout');
 
 Route::post('checkout', [CheckoutController::class, 'store']);
+
+Route::get('auth/user/2fa', [TowFactorAuthentcationController::class, 'index'])
+    ->name('front.2fa');
     
-Route::get('/dash', function () {
-    return view('dashboard');
-})
-->middleware('auth');
+// Route::get('/dash', function () {
+//     return view('dashboard');
+// })
+// ->middleware('auth');
 
 
 // Route::middleware('auth')->group(function () {

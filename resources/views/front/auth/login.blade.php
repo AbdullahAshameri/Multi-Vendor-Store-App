@@ -33,8 +33,8 @@
                                 </div>
                             @endif
                             <div class="form-group input-group">
-                                <label for="reg-fn">Email</label>
-                                <input class="form-control" type="{{ config('fortify.username') }}" id="reg-email" required>
+                                <label for="reg-email">Email</label>
+                                <input class="form-control" type="text" name="{{ config('fortify.username') }}" id="reg-email" value="{{ old('email') }}" required>
                             </div>
                             <div class="form-group input-group">
                                 <label for="reg-fn">Password</label>
