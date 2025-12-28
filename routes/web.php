@@ -42,6 +42,8 @@ Route::post('checkout', [CheckoutController::class, 'store']);
 
 Route::get('auth/user/2fa', [TowFactorAuthentcationController::class, 'index'])
     ->name('front.2fa');
+Route::get('auth/2fa/challenge', [TowFactorAuthentcationController::class, 'create'])
+    ->name('front.2fa.challenge');
     
 // Route::get('/dash', function () {
 //     return view('dashboard');

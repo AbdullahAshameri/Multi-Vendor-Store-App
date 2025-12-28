@@ -20,9 +20,17 @@
                                 @if (!$user->two_factor_secret)
                                     <button class="btn" type="submit">Enable</button>
                                 @else
-                                    {{ $user->twoFactorQrCodeSvg() }}
+                                    <div class="p-4">
+                                        {!! $user->twoFactorQrCodeSvg() !!}
+                                    </div>
+                                    <h3>Recovery Code</h3>
+                                    <ul class="mb-3">
+                                        @foreach ($user->recoveryCodes() as $code )
+                                            <li>{{ $code }}</li>
+                                        @endforeach
+                                    </ul>
                                     @method('delete')
-                                    <button class="btn" type="submit">Disable</button>
+                                    <button class="btn btn-danger" type="submit">Disable</button>
                                 @endif
                             </div>
                             </p>

@@ -1046,6 +1046,12 @@
     }
 
     &.sticky {
+        .topbar {
+            display: block !important;
+            visibility: visible !important;
+            opacity: 1 !important;
+        }
+
         .navbar-brand {
             .white-logo {
                 opacity: 0;
